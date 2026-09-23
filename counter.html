@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>카운터 앱</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-sm">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">카운터</h1>
+
+        <!-- 카운트 표시 -->
+        <div class="text-center mb-12">
+            <div id="counter" class="text-7xl font-bold text-blue-600">0</div>
+            <p class="text-gray-500 text-sm mt-2">현재 카운트</p>
+        </div>
+
+        <!-- 버튼 그룹 -->
+        <div class="flex gap-4 mb-4">
+            <button
+                id="decreaseBtn"
+                class="flex-1 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 transform hover:scale-105"
+            >
+                − 1
+            </button>
+            <button
+                id="increaseBtn"
+                class="flex-1 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 transform hover:scale-105"
+            >
+                + 1
+            </button>
+        </div>
+
+        <!-- 리셋 버튼 -->
+        <button
+            id="resetBtn"
+            class="w-full bg-gray-400 hover:bg-gray-500 active:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition duration-200"
+        >
+            리셋
+        </button>
+    </div>
+
+    <script>
+        // 상태 관리
+        let count = 0;
+        const counterDisplay = document.getElementById('counter');
+        const increaseBtn = document.getElementById('increaseBtn');
+        const decreaseBtn = document.getElementById('decreaseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        // 카운트 업데이트 함수
+        function updateDisplay() {
+            counterDisplay.textContent = count;
+        }
+
+        // 이벤트 리스너
+        increaseBtn.addEventListener('click', () => {
+            count++;
+            updateDisplay();
+        });
+
+        decreaseBtn.addEventListener('click', () => {
+            count--;
+            updateDisplay();
+        });
+
+        resetBtn.addEventListener('click', () => {
+            count = 0;
+            updateDisplay();
+        });
+    </script>
+</body>
+</html>

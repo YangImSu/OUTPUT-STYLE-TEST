@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=de/vice-width, initial-scale=1.0" />
+    <title>스톱워치</title>
+    <!-- Tailwind CSS CDN 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center"
+  >
+    <div class="bg-white rounded-lg shadow-2xl p-8 w-full max-w-md">
+      <!-- 제목 -->
+      <h1 class="text-4xl font-bold text-center mb-8 text-gray-800">
+        ⏱️ 스톱워치
+      </h1>
+
+      <!-- 시간 표시 영역 -->
+      <div class="bg-gray-900 rounded-lg p-8 mb-8 text-center">
+        <div
+          id="timeDisplay"
+          class="text-6xl font-mono font-bold text-green-400"
+        >
+          00:00:00
+        </div>
+        <p class="text-gray-400 text-sm mt-2">시:분:초</p>
+      </div>
+
+      <!-- 버튼 영역 -->
+      <div class="flex gap-4">
+        <!-- 시작/일시정지 버튼 -->
+        <button
+          id="startBtn"
+          class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg transition duration-200 transform hover:scale-105"
+        >
+          시작
+        </button>
+
+        <!-- 리셋 버튼 -->
+        <button
+          id="resetBtn"
+          class="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-4 rounded-lg transition duration-200 transform hover:scale-105"
+        >
+          리셋
+        </button>
+      </div>
+    </div>
+
+    <script>
+      // ========== 변수 선언 ==========
+      // 경과 시간을 저장하는 변수 (밀리초 단위)
+      let elapsedTime = 0;
+
+      // 타이머가 실행 중인지 여부를 나타내는 변수
+      let isRunning = false;
+
+      // setInterval()의 ID를 저장 (나중에 멈출 때 필요)
+      let intervalId = null;
+
+      // HTML 요소들을 변수에 저장
+      const timeDisplay = document.getElementById("timeDisplay");
+      const startBtn = document.getElementById("startBtn");
+      const resetBtn = document.getElementById("resetBtn");
+
+      // ========== 시간을 포맷팅하는 함수 ==========
+      // 예: 3661000ms → "01:01:01" (1시간 1분 1초)
+      function formatTime(ms) {
+        // 전체 밀리초를 초로 변환
+        const totalSeconds = Math.floor(ms / 1000);
+
+        // 시간 계산: 3600초 = 1시간
+        const hours = Math.floor(totalSeconds / 3600);
+
+        // 분 계산: 60초 = 1분 (남은 초에서)
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+
+        // 초 계산: 남은 초들
+        const seconds = totalSeconds % 60;
+
+        // 각 숫자를 2자리로 만들기 (예: 5 → "05")
+        return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+      }
+
+      // ========== 시간 업데이트 함수 ==========
+      // 화면에 경과 시간을 표시하는 함수
+      function updateDisplay() {
+        timeDisplay.textContent = formatTime(elapsedTime);
+      }
+
+      // ========== 시작/일시정지 함수 ==========
+      function toggleTimer() {
+        if (isRunning) {
+          // 현재 실행 중이면 일시정지
+          clearInterval(intervalId);
+          isRunning = false;
+          startBtn.textContent = "시작";
+          startBtn.classList.remove("bg-yellow-500", "hover:bg-yellow-600");
+          startBtn.classList.add("bg-green-500", "hover:bg-green-600");
+        } else {
+          // 현재 멈춰 있으면 시작
+          startBtn.textContent = "일시정지";
+          startBtn.classList.remove("bg-green-500", "hover:bg-green-600");
+          startBtn.classList.add("bg-yellow-500", "hover:bg-yellow-600");
+
+          isRunning = true;
+
+          // 10ms마다 경과 시간 증가 (더 부드러운 업데이트)
+          intervalId = setInterval(() => {
+            elapsedTime += 10;
+            updateDisplay();
+          }, 10);
+        }
+      }
+
+      // ========== 리셋 함수 ==========
+      // 타이머를 초기 상태로 돌리기
+      function resetTimer() {
+        // 타이머 멈추기
+        clearInterval(intervalId);
+
+        // 모든 변수를 초기값으로 되돌리기
+        elapsedTime = 0;
+        isRunning = false;
+
+        // 화면 업데이트
+        updateDisplay();
+
+        // 버튼을 '시작' 상태로 변경
+        startBtn.textContent = "시작";
+        startBtn.classList.remove("bg-yellow-500", "hover:bg-yellow-600");
+        startBtn.classList.add("bg-green-500", "hover:bg-green-600");
+      }
+
+      // ========== 이벤트 리스너 등록 ==========
+      // 시작/일시정지 버튼을 클릭했을 때
+      startBtn.addEventListener("click", toggleTimer);
+
+      // 리셋 버튼을 클릭했을 때
+      resetBtn.addEventListener("click", resetTimer);
+    </script>
+  </body>
+</html>
